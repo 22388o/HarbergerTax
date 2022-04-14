@@ -11,6 +11,18 @@ Simple implementation of the Harberger Tax. It consists of two main ideas:
 
  - Provide pull over push. Add withdraw for issuer to take the collected amount.
  
+## Implementation
+
+
+
+- The owner of the contract (we call him ISSUER to differentiate from OWNER below) defines a parameter Q measured in days, and parameter Harberger Hike (HH) and Harberger Tax (HT), as well as Initial Price (IP).
+- The contract sells a single variable V which can be modified by the current owner to contain anything (simple string).
+- On launch, anyone can buy the slot for user-settable price P, where P >= IP, so that final price is P + (P*HT) and owns it for a duration of Q. Before Q is over, they can pay an additional (P*HT) to keep owning for the next Q. It is only possible to pay 1 Q in advance.
+- At any point, anyone can buy the slot from the current owner for user-settable price P1 where P1 >= P + P*HH, so that the final cost is P1 + (P1*HT) + (P1*HH) of which P1*HT is sent to the contract issuer, and the rest to the previous owner of V.
+- The new owner owns the variable V for the next Q, or until someone purchases it from them in the same way.
+if a Q period expires without the next one being pre-paid for amount P1*HT, ownership reverts to contract issuer, and price reverts to IP.
+
+The idea is to sell an always-buyable digital slot that applies regular tax to ownership which funds the contract issuer and further development while also forcing the owner to set the price as one they truly value the slot at, and one they would be willing to pay tax for.
 
 ## Getting Started
 
